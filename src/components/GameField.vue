@@ -110,7 +110,7 @@ export default {
         this.agentTwo.tick().then(() => {
           this.targetsTwo = JSON.parse(JSON.stringify(this.agentTwo.targets)).reverse()
           this.lablesTwo = JSON.parse(JSON.stringify(this.agentTwo.lables)).reverse()
-          setTimeout(() => { this.agentLoop() }, 200)
+          setTimeout(() => { this.agentLoop() }, 60)
         })
       })
     },

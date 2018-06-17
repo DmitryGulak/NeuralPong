@@ -72,10 +72,12 @@ class Agent {
   onWin () {
     if (this.target.length !== 4) return
     if (!this.label) return
-    this.target.push(1)
-    console.log(this.target)
-    this.targets.push(this.target)
-    this.lables.push(this.label)
+    if (this.predictionMode !== 'model') {
+      this.target.push(1)
+      console.log(this.target)
+      this.targets.push(this.target)
+      this.lables.push(this.label)
+    }
     this.storeData()
     this.clearState()
     // this.game.ball.reset()
