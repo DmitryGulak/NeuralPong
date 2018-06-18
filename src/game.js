@@ -15,6 +15,7 @@ class Ball {
     this.graphics = new PIXI.Graphics()
     this.x = this.app.renderer.width / 2
     this.y = this.app.renderer.height / 2
+    this.maxVectorY = 20
     this.radius = 10
     this.velocityX = 10
     this.velocityY = 10
@@ -49,7 +50,9 @@ class Ball {
     const isHit = this.game.b.hit(this.object, this.game.player_one.object)
     if (isHit) {
       this.game.player_one.agent.onWin()
-      const vectY = (this.game.player_one.vectorY * 2) - this.vectorY
+      let vectY = (this.game.player_one.vectorY * 2) - this.vectorY
+      if (vectY > this.maxVectorY) vectY = this.maxVectorY
+      if (vectY < (this.maxVectorY * -1)) vectY = this.maxVectorY * -1
       this.updateVectors(this.vectorX * -1, vectY)
     }
   }
@@ -57,7 +60,9 @@ class Ball {
     const isHit = this.game.b.hit(this.object, this.game.player_two.object)
     if (isHit) {
       this.game.player_two.agent.onWin()
-      const vectY = (this.game.player_two.vectorY * 2) - this.vectorY
+      let vectY = (this.game.player_two.vectorY * 2) - this.vectorY
+      if (vectY > this.maxVectorY) vectY = this.maxVectorY
+      if (vectY < (this.maxVectorY * -1)) vectY = this.maxVectorY * -1
       this.updateVectors(this.vectorX * -1, vectY)
     }
   }
@@ -72,7 +77,7 @@ class Ball {
     this.velocityX = randomInteger(5, 10)
     this.velocityY = randomInteger(5, 10)
     this.object.x = 50 + randomInteger(0, this.app.renderer.width - 100)
-    this.object.y = 0 + randomInteger(0, this.app.renderer.height)
+    this.object.y = 0 + randomInteger(0, this.app.renderer.height - 20)
     this.vectorX = this.velocityX * randomInteger(-1, 1)
     this.vectorY = this.velocityY * randomInteger(-1, 1)
   }
