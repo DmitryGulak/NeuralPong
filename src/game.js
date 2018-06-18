@@ -47,22 +47,24 @@ class Ball {
     if (this.object.y < 0) this.updateVectors(null, this.vectorY * -1)
   }
   checkPlayerColision () {
-    const isHit = this.game.b.hit(this.object, this.game.player_one.object)
-    if (isHit) {
+    const isHit = this.game.b.hitTestCircleRectangle(this.object, this.game.player_one.object, true)
+    if (isHit === 'topLeft' || isHit === 'leftMiddle' || isHit === 'bottomLeft') {
       this.game.player_one.agent.onWin()
       let vectY = (this.game.player_one.vectorY * 2) - this.vectorY
       if (vectY > this.maxVectorY) vectY = this.maxVectorY
       if (vectY < (this.maxVectorY * -1)) vectY = this.maxVectorY * -1
+      this.object.x -= 10
       this.updateVectors(this.vectorX * -1, vectY)
     }
   }
   checkPlayerTwoColision () {
-    const isHit = this.game.b.hit(this.object, this.game.player_two.object)
-    if (isHit) {
+    const isHit = this.game.b.hitTestCircleRectangle(this.object, this.game.player_two.object)
+    if (isHit === 'topRight' || isHit === 'rightMiddle' || isHit === 'bottomRight') {
       this.game.player_two.agent.onWin()
       let vectY = (this.game.player_two.vectorY * 2) - this.vectorY
       if (vectY > this.maxVectorY) vectY = this.maxVectorY
       if (vectY < (this.maxVectorY * -1)) vectY = this.maxVectorY * -1
+      this.object.x += 10
       this.updateVectors(this.vectorX * -1, vectY)
     }
   }
@@ -107,8 +109,9 @@ class Player {
     this.graphics.endFill()
     this.object = new PIXI.Sprite(this.graphics.generateCanvasTexture())
     this.object.x = this.x
-    this.object.y = this.y
+    this.object.y = this.y - 10
     this.object.width = this.width
+    this.object.height = this.height
     this.app.stage.addChild(this.object)
   }
 }
