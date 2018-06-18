@@ -76,8 +76,8 @@ class Ball {
   reset () {
     this.velocityX = randomInteger(5, 10)
     this.velocityY = randomInteger(5, 10)
-    this.object.x = 50 + randomInteger(0, this.app.renderer.width - 100)
-    this.object.y = 0 + randomInteger(0, this.app.renderer.height - 20)
+    this.object.x = this.app.renderer.width / 2
+    this.object.y = this.app.renderer.height / 2
     this.vectorX = this.velocityX * randomInteger(-1, 1)
     this.vectorY = this.velocityY * randomInteger(-1, 1)
   }
