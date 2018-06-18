@@ -7,12 +7,12 @@
         <el-row>
           <el-col>
             <el-radio-group v-model="predictionModeTwo" @change="updatePredictionModeTwo" size="mini">
-              <el-radio-button label="model"></el-radio-button>
-              <el-radio-button label="random"></el-radio-button>
-              <el-radio-button label="user"></el-radio-button>
+              <el-radio-button label="user">User</el-radio-button>
+              <el-radio-button label="random">Random</el-radio-button>
+              <el-radio-button label="model">Model</el-radio-button>
             </el-radio-group>
-            <el-button @click="trainAgentTwo" size="mini">train</el-button>
-            <el-button @click="resetDataTwo" size="mini" type="danger">reset data</el-button>
+            <el-button @click="trainAgentTwo" size="mini" type="success">Train</el-button>
+            <el-button @click="resetDataTwo" size="mini" type="danger">Reset data</el-button>
           </el-col>
         </el-row>
         <el-row>
@@ -27,17 +27,17 @@
         </el-row>
       </el-col>
       <el-col :span="2">
-        <el-button @click="resetBall" type="warning" size="mini">reset</el-button>
+        <el-button @click="resetBall" type="warning" size="mini">Reset ball</el-button>
       </el-col>
       <el-col :span="11" style="text-align: right;">
         <el-row>
           <el-col>
-            <el-button @click="resetDataOne" size="mini" type="danger">reset data</el-button>
-            <el-button @click="trainAgentOne" size="mini">train</el-button>
+            <el-button @click="resetDataOne" size="mini" type="danger">Reset data</el-button>
+            <el-button @click="trainAgentOne" size="mini" type="success">Train</el-button>
             <el-radio-group v-model="predictionModeOne" @change="updatePredictionModeOne" size="mini">
-              <el-radio-button label="model"></el-radio-button>
-              <el-radio-button label="random"></el-radio-button>
-              <el-radio-button label="user"></el-radio-button>
+              <el-radio-button label="model">Model</el-radio-button>
+              <el-radio-button label="random">Random</el-radio-button>
+              <el-radio-button label="user">User</el-radio-button>
             </el-radio-group>
           </el-col>
         </el-row>
@@ -54,7 +54,8 @@
       </el-col>
     </el-row>
     <br>
-    Open console to see more info
+    Open console to see more info <br>
+    Github: <a href="https://github.com/DmitryGulak/NeuralPong">https://github.com/DmitryGulak/NeuralPong</a>
     <br>
   </div>
 </template>
@@ -105,7 +106,7 @@ export default {
       this.agentTwo.userPick(e.clientY)
     },
     initGame () {
-      this.game = new Game(800, 500)
+      this.game = new Game(900, 500)
       this.game.initView(this.$refs.appField)
       this.agentTwo = new Agent(this.game, this, this.game.player_two, 'agent_two')
       this.agentOne = new Agent(this.game, this, this.game.player_one, 'agent_one')
