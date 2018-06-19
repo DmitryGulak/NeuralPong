@@ -1,14 +1,21 @@
 import * as tf from '@tensorflow/tfjs'
 
+function randomInteger (min, max) {
+  let rand = min - 0.5 + Math.random() * (max - min + 1)
+  rand = Math.round(rand)
+  if (rand === 0) return randomInteger(min, max)
+  return rand
+}
+
 class Agent {
   constructor (game, app, player, agent_name) {
     this.agent_name = agent_name
     this.player = player
     this.player.agent = this
-    this.targetCoordsLength = 6
+    this.targetCoordsLength = 4
     this.trainLoss = 9999
-    this.randomTimeout = 100
-    this.modelTimeout = 50
+    this.randomTimeout = 20
+    this.modelTimeout = 30
     this.app = app
     this.game = game
     this.targets = []
@@ -25,10 +32,11 @@ class Agent {
   }
   trainData () {
     const model = tf.sequential()
-    model.add(tf.layers.dense({units: 4, inputShape: [this.targetCoordsLength]}))
-    model.add(tf.layers.dense({units: 512, inputShape: [this.targetCoordsLength]}))
-    model.add(tf.layers.dense({units: 256, inputShape: [512]}))
-    model.add(tf.layers.dense({units: 1, inputShape: [256]}))
+    model.add(tf.layers.dense({units: this.targetCoordsLength, inputShape: [this.targetCoordsLength]}))
+    model.add(tf.layers.dense({units: 64, inputShape: [this.targetCoordsLength]}))
+    model.add(tf.layers.dense({units: 256, inputShape: [64]}))
+    model.add(tf.layers.dense({units: 1024, inputShape: [256]}))
+    model.add(tf.layers.dense({units: 1, inputShape: [1024]}))
     const optimizer = tf.train.adam(0.001)
     model.compile({
       optimizer: optimizer,
@@ -40,9 +48,9 @@ class Agent {
     console.log('Start training')
     async function train () {
       let loss = 9999
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 200; i++) {
         const result = await model.fit(xs, ys)
-        console.log(`${i + 1}/100, Loss: ${result.history.loss[0]}`)
+        console.log(`${i + 1}/200, Loss: ${result.history.loss[0]}`)
         loss = result.history.loss[0]
       }
       return loss
@@ -84,7 +92,8 @@ class Agent {
     if (this.predictionMode !== 'model') {
       this.target.map((item) => Math.round(item))
       this.targets.push(this.target)
-      this.lables.push(Math.ceil((this.label)*100)/100)
+      const label = ((this.player.object.y * 100) / this.game.app.renderer.height) / 100
+      this.lables.push(Math.ceil((label) * 100) / 100)
     }
     this.storeData()
     this.clearState()
@@ -105,7 +114,8 @@ class Agent {
       this.target.push(this.game.ball.object.x)
       this.target.push(this.game.ball.object.y)
       return this.randomTimeout
-    } else {
+    }
+    if (this.predictionMode === 'model') {
       this.target.shift()
       this.target.shift()
       this.target.push(this.game.ball.object.x)
@@ -121,7 +131,8 @@ class Agent {
       console.log(`(${this.agent_name}) Model prediction: ${this.label}`)
       this.pickY(this.label)
     } else {
-      this.label = Math.random()
+      const y = randomInteger(1, this.game.app.renderer.height)
+      this.label = ((y * 100) / this.game.app.renderer.height) / 100
       console.log(`(${this.agent_name}) Random prediction: ${this.label}`)
       this.pickY(this.label)
       return this.randomTimeout

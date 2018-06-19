@@ -40,16 +40,23 @@ class Ball {
   }
   conllisionCheck () {
     const objXRight = this.object.x + (this.radius * 2)
-    if (objXRight > this.app.renderer.width) this.game.player_one.agent.onLose()
-    if (this.object.x < 0) this.game.player_two.agent.onLose()
+    if (objXRight > this.app.renderer.width) {
+      this.game.player_one.agent.onLose()
+      this.game.player_two.agent.clearState()
+    }
+    if (this.object.x < 0) {
+      this.game.player_two.agent.onLose()
+      this.game.player_one.agent.clearState()
+    }
     const objYDown = this.object.y + (this.radius * 2)
     if (objYDown > this.app.renderer.height) this.updateVectors(null, this.vectorY * -1)
     if (this.object.y < 0) this.updateVectors(null, this.vectorY * -1)
   }
   checkPlayerColision () {
-    const isHit = this.game.b.hitTestCircleRectangle(this.object, this.game.player_one.object, true)
-    if (isHit === 'topLeft' || isHit === 'leftMiddle' || isHit === 'bottomLeft') {
+    const isHit = this.game.b.rectangleCollision(this.object, this.game.player_one.object, true)
+    if (isHit === 'right') {
       this.game.player_one.agent.onWin()
+      this.game.player_two.agent.clearState()
       let vectY = (this.game.player_one.vectorY * 2) - this.vectorY
       if (vectY > this.maxVectorY) vectY = this.maxVectorY
       if (vectY < (this.maxVectorY * -1)) vectY = this.maxVectorY * -1
@@ -58,9 +65,10 @@ class Ball {
     }
   }
   checkPlayerTwoColision () {
-    const isHit = this.game.b.hitTestCircleRectangle(this.object, this.game.player_two.object)
-    if (isHit === 'topRight' || isHit === 'rightMiddle' || isHit === 'bottomRight') {
+    const isHit = this.game.b.rectangleCollision(this.object, this.game.player_two.object)
+    if (isHit === 'left') {
       this.game.player_two.agent.onWin()
+      this.game.player_one.agent.clearState()
       let vectY = (this.game.player_two.vectorY * 2) - this.vectorY
       if (vectY > this.maxVectorY) vectY = this.maxVectorY
       if (vectY < (this.maxVectorY * -1)) vectY = this.maxVectorY * -1
